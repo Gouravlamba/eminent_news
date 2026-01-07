@@ -1,12 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/shorts_model.dart';
-import '../../data/services/api_service.dart';
-import '../../data/services/shorts_service.dart';
-
-// Service provider
-final shortsServiceProvider = Provider<ShortsService>(
-  (ref) => ShortsService(ref.read(apiServiceProvider)),
-);
+import 'providers.dart';
 
 // Shorts state
 class ShortsState {
@@ -123,6 +117,3 @@ class ShortsNotifier extends StateNotifier<ShortsState> {
 final shortsProvider = StateNotifierProvider<ShortsNotifier, ShortsState>((ref) {
   return ShortsNotifier(ref.read(shortsServiceProvider));
 });
-
-// Import for apiServiceProvider
-final apiServiceProvider = Provider<ApiService>((ref) => ApiService());

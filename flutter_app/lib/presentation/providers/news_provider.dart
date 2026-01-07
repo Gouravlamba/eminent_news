@@ -1,12 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/news_model.dart';
-import '../../data/services/api_service.dart';
-import '../../data/services/news_service.dart';
-
-// Service provider
-final newsServiceProvider = Provider<NewsService>(
-  (ref) => NewsService(ref.read(apiServiceProvider)),
-);
+import 'providers.dart';
 
 // News state
 class NewsState {
@@ -131,6 +125,3 @@ final newsDetailProvider = FutureProvider.family<NewsModel?, String>((ref, id) a
   }
   return null;
 });
-
-// Import for apiServiceProvider
-final apiServiceProvider = Provider<ApiService>((ref) => ApiService());

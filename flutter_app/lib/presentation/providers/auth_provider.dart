@@ -1,15 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/user_model.dart';
-import '../../data/services/api_service.dart';
-import '../../data/services/auth_service.dart';
 import '../../core/utils/shared_prefs_helper.dart';
 import '../../core/constants/app_constants.dart';
-
-// Service providers
-final apiServiceProvider = Provider<ApiService>((ref) => ApiService());
-final authServiceProvider = Provider<AuthService>(
-  (ref) => AuthService(ref.read(apiServiceProvider)),
-);
+import 'providers.dart';
 
 // Auth state
 class AuthState {

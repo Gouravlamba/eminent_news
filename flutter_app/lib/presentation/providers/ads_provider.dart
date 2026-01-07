@@ -1,12 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/ads_model.dart';
-import '../../data/services/api_service.dart';
-import '../../data/services/ads_service.dart';
-
-// Service provider
-final adsServiceProvider = Provider<AdsService>(
-  (ref) => AdsService(ref.read(apiServiceProvider)),
-);
+import 'providers.dart';
 
 // Ads state
 class AdsState {
@@ -87,6 +81,3 @@ class AdsNotifier extends StateNotifier<AdsState> {
 final adsProvider = StateNotifierProvider<AdsNotifier, AdsState>((ref) {
   return AdsNotifier(ref.read(adsServiceProvider));
 });
-
-// Import for apiServiceProvider
-final apiServiceProvider = Provider<ApiService>((ref) => ApiService());
