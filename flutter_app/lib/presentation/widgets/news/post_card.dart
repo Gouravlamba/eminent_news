@@ -211,6 +211,7 @@ class _PostCardState extends ConsumerState<PostCard> {
 
     return Card(
       elevation: 2,
+      color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(

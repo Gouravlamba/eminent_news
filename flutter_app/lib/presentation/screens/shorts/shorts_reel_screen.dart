@@ -1,3 +1,5 @@
+import 'package:eminent_news_flutter/presentation/widgets/common/app_header.dart';
+import 'package:eminent_news_flutter/presentation/widgets/common/mobile_menu_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
@@ -37,19 +39,15 @@ class _ShortsReelScreenState extends ConsumerState<ShortsReelScreen> {
       return const Scaffold(
         backgroundColor: Colors.black,
         body: LoadingWidget(),
+        // ✅ Bottom nav comes from MainLayout
       );
     }
 
     if (shortsState.shorts.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => context.go('/home'),
-          ),
-        ),
+        appBar: const AppHeader(), // Use custom header
+        drawer: const MobileMenuDrawer(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -69,6 +67,7 @@ class _ShortsReelScreenState extends ConsumerState<ShortsReelScreen> {
             ],
           ),
         ),
+        // ✅ Bottom nav comes from MainLayout
       );
     }
 
@@ -94,9 +93,14 @@ class _ShortsReelScreenState extends ConsumerState<ShortsReelScreen> {
           );
         },
       ),
+      // ✅ Bottom nav comes from MainLayout automatically
     );
   }
 }
+
+// ===================================================================
+// VIDEO PLAYER WIDGET (ALL UI AND LOGIC PRESERVED - NO CHANGES)
+// ===================================================================
 
 class _ShortVideoPlayer extends StatefulWidget {
   final String videoUrl;
@@ -233,7 +237,7 @@ class _ShortVideoPlayerState extends State<_ShortVideoPlayer> {
                   icon: const Icon(Icons.share, color: Colors.white),
                   iconSize: 32,
                   onPressed: () {
-                    // TODO: Implement share
+                    // TODO:  Implement share
                   },
                 ),
                 const SizedBox(height: 24),

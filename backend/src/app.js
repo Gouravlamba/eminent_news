@@ -15,8 +15,8 @@ const app = express();
 const bodyparser = require('body-parser');
 
 app.use(cors({
-    origin:process.env.FRONTEND_URL,
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    origin: '*', // Allow requests from any origin
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: [
         "Content-Type",
         "Authorization",
@@ -24,7 +24,7 @@ app.use(cors({
         "Expires",
         "Pragma",
       ],
-    credentials: true
+    credentials: false
 }))
 
 // to access req.body

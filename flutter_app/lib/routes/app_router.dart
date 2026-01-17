@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../presentation/providers/auth_provider.dart';
+import '../presentation/layouts/main_layout.dart';
 import '../presentation/screens/landing/landing_screen.dart';
 import '../presentation/screens/auth/login_screen.dart';
 import '../presentation/screens/auth/signup_screen.dart';
@@ -62,7 +62,9 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     errorBuilder: (context, state) => const NotFoundScreen(),
     routes: [
-      // Public Routes
+      // ========================================
+      // PUBLIC ROUTES (NO BOTTOM NAV)
+      // ========================================
       GoRoute(
         path: '/',
         builder: (context, state) => const LandingScreen(),
@@ -72,39 +74,86 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
-        path: '/signup/: role',
+        path: '/signup/:role', // Fixed extra space in the route path
         builder: (context, state) {
           final role = state.pathParameters['role'] ?? 'user';
           return SignupScreen(role: role);
         },
       ),
 
-      // Main App Routes
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(),
-      ),
-      GoRoute(
-        path: '/news',
-        builder: (context, state) => const NewsListScreen(),
-      ),
-      GoRoute(
-        path: '/news/:id',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return NewsDetailScreen(newsId: id);
+      // ========================================
+      // MAIN APP ROUTES (WITH BOTTOM NAV)
+      // ========================================
+      ShellRoute(
+        builder: (context, state, child) {
+          // Determine current index based on location
+          int currentIndex = 0;
+          final path = state.uri.path;
+
+          if (path == '/home') {
+            currentIndex = 0;
+          } else if (path.startsWith('/news')) {
+            currentIndex = 1;
+          } else if (path.startsWith('/shorts')) {
+            currentIndex = 2;
+          } else if (path.startsWith('/my-profile')) {
+            currentIndex = 3;
+          }
+
+          return MainLayout(
+            currentIndex: currentIndex,
+            child: child,
+          );
         },
-      ),
-      GoRoute(
-        path: '/shorts',
-        builder: (context, state) => const ShortsReelScreen(),
-      ),
-      GoRoute(
-        path: '/my-profile',
-        builder: (context, state) => const ProfileScreen(),
+        routes: [
+          // Home
+          GoRoute(
+            path: '/home',
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: const HomeScreen(),
+            ),
+          ),
+
+          // News List
+          GoRoute(
+            path: '/news',
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: const NewsListScreen(),
+            ),
+          ),
+
+          // News Detail
+          GoRoute(
+            path: '/news/:id',
+            pageBuilder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return NoTransitionPage(
+                child: NewsDetailScreen(newsId: id),
+              );
+            },
+          ),
+
+          // Shorts
+          GoRoute(
+            path: '/shorts',
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: const ShortsReelScreen(),
+            ),
+          ),
+
+          // Profile
+          GoRoute(
+            path: '/my-profile',
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: const ProfileScreen(),
+            ),
+          ),
+        ],
       ),
 
-      // Admin Routes
+      // ========================================
+      // ADMIN ROUTES (NO BOTTOM NAV)
+      // ========================================
       GoRoute(
         path: '/admin/news',
         builder: (context, state) => const AdminDashboard(),
@@ -126,7 +175,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const AdsPage(),
       ),
 
-      // Editor Routes
+      // ========================================
+      // EDITOR ROUTES (NO BOTTOM NAV)
+      // ========================================
       GoRoute(
         path: '/editor/news',
         builder: (context, state) => const EditorDashboard(),

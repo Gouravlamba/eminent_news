@@ -37,8 +37,9 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthService _authService;
   final SharedPreferences _prefs;
+  final Ref _ref; // Add ref as a field
 
-  AuthNotifier(this._authService, this._prefs) : super(AuthState()) {
+  AuthNotifier(this._authService, this._prefs, this._ref) : super(AuthState()) {
     _loadUser();
   }
 
@@ -76,18 +77,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
+      final authService = _ref.read(authServiceProvider); // Use _ref
       final user = await _authService.login(
         email: email,
         password: password,
       );
 
-      await _saveUser(user);
+      await _prefs.setString(
+          'authData',
+          json.encode(
+              {'id': user.id, 'role': user.role})); // Replace _storageService
 
-      state = state.copyWith(
+      state = AuthState(
+        isAuthenticated: true,
         currentUser: user,
         isLoading: false,
-        isAuthenticated: true,
       );
+      print(
+          'Auth State Updated: isAuthenticated=${state.isAuthenticated}, currentUser=${state.currentUser}');
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -103,26 +110,36 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String email,
     required String password,
     required String role,
-    String? dob,
+    String? username,
+    String? phone,
+    String? address,
   }) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final user = await _authService.signup(
+      final authService = _ref.read(authServiceProvider); // Use _ref
+      final user = await authService.signup(
         name: name,
         email: email,
         password: password,
         role: role,
-        dob: dob,
+        username: username,
+        phone: phone,
+        address: address,
       );
 
-      await _saveUser(user);
+      await _prefs.setString(
+          'authData',
+          json.encode(
+              {'id': user.id, 'role': user.role})); // Replace _storageService
 
       state = state.copyWith(
         currentUser: user,
         isLoading: false,
         isAuthenticated: true,
       );
+      print(
+          'Auth State Updated: isAuthenticated=${state.isAuthenticated}, currentUser=${state.currentUser}');
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -163,5 +180,5 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
     throw Exception('SharedPreferences not initialized');
   }
 
-  return AuthNotifier(authService, prefs);
+  return AuthNotifier(authService, prefs, ref);
 });

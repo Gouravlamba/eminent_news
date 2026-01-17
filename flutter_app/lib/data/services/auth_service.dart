@@ -16,7 +16,7 @@ class AuthService {
   }) async {
     try {
       final response = await _apiService.post(
-        ApiConstants.login,
+        '/login',
         data: {
           'email': email,
           'password': password,
@@ -41,17 +41,21 @@ class AuthService {
     required String email,
     required String password,
     required String role,
-    String? dob,
+    String? username,
+    String? phone,
+    String? address,
   }) async {
     try {
       final response = await _apiService.post(
-        ApiConstants.signup,
+        '/register',
         data: {
           'name': name,
+          'username': username,
           'email': email,
           'password': password,
+          'phone': phone,
+          'address': address,
           'role': role,
-          if (dob != null) 'dob': dob,
         },
       );
 
@@ -62,7 +66,7 @@ class AuthService {
       }
     } on DioException catch (e) {
       throw Exception(
-        e.response?.data['message'] ?? 'Network error occurred',
+        e.response?.data['message'] ?? 'Signup failed.  Please try again.',
       );
     }
   }

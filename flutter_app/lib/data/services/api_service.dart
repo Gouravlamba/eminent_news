@@ -17,8 +17,7 @@ class ApiService {
           'Accept': 'application/json',
         },
         validateStatus: (status) => status != null && status < 500,
-        // For web:  enable credentials (cookies)
-        extra: {'withCredentials': true},
+        // Note: avoid withCredentials on Web unless your backend CORS is configured.
       ),
     );
 

@@ -1,5 +1,8 @@
 import 'package:eminent_news_flutter/data/models/ads_model.dart';
+import 'package:eminent_news_flutter/presentation/widgets/common/app_header.dart';
 import 'package:eminent_news_flutter/presentation/widgets/common/footer_widget.dart';
+import 'package:eminent_news_flutter/presentation/widgets/common/mobile_menu_drawer.dart';
+
 import 'package:eminent_news_flutter/presentation/widgets/news/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,12 +11,10 @@ import 'package:intl/intl.dart';
 import '../../providers/news_provider.dart';
 import '../../providers/ads_provider.dart';
 import '../../widgets/common/loading_widget.dart';
-
 import '../../widgets/news/post_card_small.dart';
 import '../../widgets/common/faq_widget.dart';
 import 'widgets/hero_carousel.dart';
 import '../../../data/models/news_model.dart';
-
 import '../../../core/constants/app_constants.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -26,9 +27,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedBottomNavIndex = 0;
 
-  // Featured news (static like React)
   final Map<String, dynamic> featured = {
     '_id': 'ddlkfj',
     'title': 'Startup Revolutionises Last-Mile Delivery',
@@ -36,7 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         'A local startup has piloted an autonomous delivery network that reduces delivery times and cuts carbon emissions in dense cities.',
     'author': 'Rahul Desai',
     'date': 'November 9, 2025',
-    'images': 'assets/images/w1.jpeg', // Add this image to assets
+    'images': 'assets/images/w1.jpeg',
     'likes': 33,
   };
 
@@ -48,7 +47,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       vsync: this,
     );
 
-    // Fetch data on init (matches React useEffect)
     Future.microtask(() {
       ref.read(newsProvider.notifier).fetchNews();
       ref.read(adsProvider.notifier).fetchAds();
@@ -61,10 +59,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.dispose();
   }
 
-  // Get highlight ad by position (matches React logic)
   AdsModel? _getHighlightAd(List<AdsModel> highlightAds, int position) {
     if (highlightAds.isEmpty) return null;
     return highlightAds[position % highlightAds.length];
+  }
+
+  bool _isMobileOrTablet(double width) => width < 1024;
+
+  // Mobile responsive helpers
+  bool _isSmallPhone(double width) => width < 375;
+  bool _isStandardPhone(double width) => width >= 375 && width < 414;
+  bool _isLargePhone(double width) => width >= 414 && width < 768;
+
+  double _getMobileHorizontalPadding(double width) {
+    if (_isSmallPhone(width)) return 12;
+    if (_isStandardPhone(width)) return 16;
+    return 20;
+  }
+
+  double _getMobileCardSpacing(double width) {
+    if (_isSmallPhone(width)) return 12;
+    if (_isStandardPhone(width)) return 16;
+    return 20;
+  }
+
+  double _getMobileChildAspectRatio(double width) {
+    if (_isSmallPhone(width)) return 1.15;
+    if (_isStandardPhone(width)) return 1.2;
+    return 1.25;
   }
 
   @override
@@ -74,20 +96,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 768;
 
-    // Loading state (matches React loading check)
     if (newsState.isLoading || adsState.isLoading) {
-      return const Scaffold(
-        body: LoadingWidget(),
-      );
+      return const Scaffold(body: LoadingWidget());
     }
 
-    // Filter ads by category (matches React filter logic)
     final bannerAds =
         adsState.ads.where((ad) => ad.category == 'Banner').toList();
     final highlightAds =
         adsState.ads.where((ad) => ad.category == 'Highlights').toList();
 
-    // Group news by category (matches React groupedNews)
     final groupedNews = {
       'national':
           newsState.news.where((n) => n.category == 'National').toList(),
@@ -97,7 +114,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       'sports': newsState.news.where((n) => n.category == 'Sports').toList(),
     };
 
-    // Sort news by date (for Today's Highlights)
     final sortedNews = [...newsState.news]..sort((a, b) {
         final dateA = DateTime.tryParse(a.createdAt) ?? DateTime.now();
         final dateB = DateTime.tryParse(b.createdAt) ?? DateTime.now();
@@ -105,146 +121,61 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Logo
-            Image.asset(
-              'assets/images/logo-white.png',
-              height: 30,
-            ),
-
-            // Space
-            const SizedBox(width: 8),
-
-            // Vertical Divider ( | )
-            Container(
-              height: 30,
-              width: 1,
-              color: Colors.white, // change color if needed
-            ),
-
-            // Space
-            const SizedBox(width: 8),
-
-            // Texts
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+      appBar: const AppHeader(),
+      drawer: const MobileMenuDrawer(),
+      body: SafeArea(
+        // ✅ Handles iOS notches and Android system bars
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await ref.read(newsProvider.notifier).fetchNews();
+            await ref.read(adsProvider.notifier).fetchAds();
+          },
+          child: SingleChildScrollView(
+            child: Column(
               children: [
-                Text(
-                  'The Eminent News',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                if (bannerAds.isNotEmpty) HeroCarousel(ads: bannerAds),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile
+                        ? _getMobileHorizontalPadding(screenWidth)
+                        : 32,
+                    vertical: isMobile ? 16 : 8,
+                  ),
+                  child: Column(
+                    children: [
+                      if (isMobile) _buildMobileTabs(groupedNews, screenWidth),
+                      if (!isMobile)
+                        _buildDesktopLayout(
+                            sortedNews, groupedNews, highlightAds),
+                      const SizedBox(height: 32),
+                      const FAQWidget(),
+                    ],
                   ),
                 ),
-                Text(
-                  'Empowering Wisdom',
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                ),
+                const FooterWidget(),
               ],
             ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // TODO: Implement search
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            onPressed: () => context.go('/my-profile'),
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(newsProvider.notifier).fetchNews();
-          await ref.read(adsProvider.notifier).fetchAds();
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Hero Carousel (matches React HeroCarousel)
-              if (bannerAds.isNotEmpty) HeroCarousel(ads: bannerAds),
-
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 16 : 32,
-                  vertical: isMobile ? 16 : 8,
-                ),
-                child: Column(
-                  children: [
-                    // MOBILE:  Tabbed News Section
-                    if (isMobile) _buildMobileTabs(groupedNews),
-
-                    // DESKTOP: Two Column Layout
-                    if (!isMobile)
-                      _buildDesktopLayout(
-                        sortedNews,
-                        groupedNews,
-                        highlightAds,
-                      ),
-
-                    // FAQ Section
-                    const SizedBox(height: 32),
-                    const FAQWidget(),
-                    const SizedBox(height: 5),
-                    const FooterWidget(),
-                  ],
-                ),
-              ),
-            ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedBottomNavIndex,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        onTap: (index) {
-          setState(() => _selectedBottomNavIndex = index);
-          switch (index) {
-            case 0:
-              context.go('/home');
-              break;
-            case 1:
-              context.go('/news');
-              break;
-            case 2:
-              context.go('/shorts');
-              break;
-            case 3:
-              context.go('/my-profile');
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.article), label: 'News'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.video_library), label: 'Shorts'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
       ),
     );
   }
 
-  // MOBILE TABS (matches React mobile tabbed section)
-  Widget _buildMobileTabs(Map<String, List<NewsModel>> groupedNews) {
+  // MOBILE TABS WITH RESPONSIVE CARDS
+  Widget _buildMobileTabs(
+      Map<String, List<NewsModel>> groupedNews, double screenWidth) {
+    final horizontalPadding = _getMobileHorizontalPadding(screenWidth);
+    final cardSpacing = _getMobileCardSpacing(screenWidth);
+    final childAspectRatio = _getMobileChildAspectRatio(screenWidth);
+    final titleFontSize = _isSmallPhone(screenWidth) ? 22.0 : 24.0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Explore Categories',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: titleFontSize,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
@@ -253,7 +184,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
         // Tab Bar
         Container(
-          height: 48,
+          height: _isSmallPhone(screenWidth) ? 44 : 48,
           decoration: const BoxDecoration(
             border: Border(
               top: BorderSide(color: Color(0xFFF40607), width: 2),
@@ -265,16 +196,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             isScrollable: true,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.grey[700],
-            indicator: const BoxDecoration(
-              color: Color(0xFFF40607),
+            labelStyle: TextStyle(
+              fontSize: _isSmallPhone(screenWidth) ? 14 : 16,
+              fontWeight: FontWeight.w600,
+            ),
+            indicator: BoxDecoration(
+              color: const Color(0xFFF40607),
+              borderRadius: BorderRadius.circular(5),
             ),
             tabs: AppConstants.newsCategories
-                .map((cat) => Tab(text: cat))
+                .map((cat) => Tab(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: _isSmallPhone(screenWidth) ? 12 : 16,
+                        ),
+                        child: Text(cat),
+                      ),
+                    ))
                 .toList(),
           ),
         ),
 
-        // Tab Views
+        // Tab Views with Responsive Cards
         SizedBox(
           height: 600,
           child: TabBarView(
@@ -284,25 +227,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               final newsList = groupedNews[key] ?? [];
 
               return newsList.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Padding(
-                        padding: EdgeInsets.all(40),
-                        child: Text(
-                          'No posts found for this category.',
-                          style: TextStyle(color: Colors.grey),
+                        padding: const EdgeInsets.all(40),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.article_outlined,
+                                size: 48, color: Colors.grey),
+                            SizedBox(height: 12),
+                            Text(
+                              'No posts found for this category.',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 14),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       ),
                     )
-                  : GridView.builder(
-                      padding: const EdgeInsets.only(top: 24),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: 1.2,
+                  : ListView.separated(
+                      padding: EdgeInsets.only(
+                        top: cardSpacing,
+                        bottom: cardSpacing,
                       ),
                       itemCount: newsList.length,
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: cardSpacing),
                       itemBuilder: (context, index) {
                         return PostCard(
                           news: newsList[index],
@@ -318,7 +269,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  // DESKTOP LAYOUT (matches React desktop two-column layout)
+  // DESKTOP LAYOUT (unchanged)
   Widget _buildDesktopLayout(
     List<NewsModel> sortedNews,
     Map<String, List<NewsModel>> groupedNews,
@@ -327,7 +278,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // LEFT COLUMN: Today's Highlights (70%)
         Expanded(
           flex: 7,
           child: Container(
@@ -339,7 +289,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                // Header Badge
                 Positioned(
                   top: -24,
                   left: 20,
@@ -354,20 +303,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       children: const [
                         Icon(Icons.emoji_events, color: Colors.white, size: 22),
                         SizedBox(width: 8),
-                        Text(
-                          "Today's Highlights",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        Text("Today's Highlights",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
                 ),
-
-                // News List with Ads
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -376,17 +320,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       ...sortedNews.asMap().entries.map((entry) {
                         final index = entry.key;
                         final item = entry.value;
-
                         return Column(
                           children: [
                             PostCardSmall(
-                              news: item,
-                              fetchNews: () =>
-                                  ref.read(newsProvider.notifier).fetchNews(),
-                            ),
+                                news: item,
+                                fetchNews: () => ref
+                                    .read(newsProvider.notifier)
+                                    .fetchNews()),
                             const Divider(),
-
-                            // Insert ad after 5th and 10th item
                             if ((index == 4 || index == 9) &&
                                 highlightAds.isNotEmpty)
                               Container(
@@ -416,8 +357,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
           ),
         ),
-
-        // RIGHT COLUMN: Latest News (30%)
         Expanded(
           flex: 3,
           child: Container(
@@ -430,7 +369,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                // Header Badge
                 Positioned(
                   top: -24,
                   left: 0,
@@ -445,39 +383,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       children: const [
                         Text('⚡', style: TextStyle(fontSize: 20)),
                         SizedBox(width: 4),
-                        Text(
-                          'Latest News',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        Text('Latest News',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
                 ),
-
                 Column(
                   children: [
                     const SizedBox(height: 16),
-
-                    // Featured News Card
                     Container(
                       height: 192,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(8)),
                       clipBehavior: Clip.antiAlias,
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          Image.asset(
-                            featured['images'],
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stack) =>
-                                Container(color: Colors.grey[300]),
-                          ),
+                          Image.asset(featured['images'],
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stack) =>
+                                  Container(color: Colors.grey[300])),
                           Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -485,7 +414,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 end: Alignment.bottomCenter,
                                 colors: [
                                   Colors.transparent,
-                                  Colors.black.withOpacity(0.7),
+                                  Colors.black.withOpacity(0.7)
                                 ],
                               ),
                             ),
@@ -497,40 +426,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  featured['date'],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                ),
+                                Text(featured['date'],
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 12)),
                                 const SizedBox(height: 4),
-                                Text(
-                                  featured['title'],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  maxLines: 2,
-                                ),
+                                Text(featured['title'],
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                    maxLines: 2),
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 28),
-
-                    // Small News List
                     ...groupedNews['national']!.map((item) {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 28),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Image
                             ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: Image.network(
@@ -540,55 +458,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stack) =>
                                     Container(
-                                  width: 112,
-                                  height: 112,
-                                  color: Colors.grey[300],
-                                ),
+                                        width: 112,
+                                        height: 112,
+                                        color: Colors.grey[300]),
                               ),
                             ),
                             const SizedBox(width: 12),
-
-                            // Content
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    item.title,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.3,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                  Text(item.title,
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          height: 1.3),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'By ${item.editor?.name ?? "Unknown"} / ${_formatDate(item.createdAt)}',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
+                                      'By ${item.editor?.name ?? "Unknown"} / ${_formatDate(item.createdAt)}',
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey[600])),
                                   const SizedBox(height: 4),
-                                  Text(
-                                    item.description,
-                                    style: const TextStyle(fontSize: 10),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                  Text(item.description,
+                                      style: const TextStyle(fontSize: 10),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis),
                                   const SizedBox(height: 4),
                                   InkWell(
                                     onTap: () => context.go('/news/${item.id}'),
-                                    child: const Text(
-                                      'Read more →',
-                                      style: TextStyle(
-                                        color: Color(0xFFF40607),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                    child: const Text('Read more →',
+                                        style: TextStyle(
+                                            color: Color(0xFFF40607),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500)),
                                   ),
                                 ],
                               ),

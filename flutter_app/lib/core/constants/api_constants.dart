@@ -1,8 +1,9 @@
+import '../../config/env.dart';
+
 class ApiConstants {
-  // Replace with your actual backend URL
-  // This matches your VITE_BASE_URL from React
-  static const String baseUrl =
-      'http://172.11.10.244:5000/api/v1'; // Updated to use the machine's IP address
+  // Central API base URL, configurable via --dart-define=BASE_URL=...
+  // Falls back to Environment.default (localhost) if not provided.
+  static const String baseUrl = Environment.baseUrl;
 
   // Auth Endpoints
   static const String login = '/login';
