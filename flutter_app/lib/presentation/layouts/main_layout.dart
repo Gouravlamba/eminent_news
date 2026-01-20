@@ -41,16 +41,20 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
       onTap: (index) => _onNavTap(context, index),
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.home_outlined),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.article),
+          icon: Icon(Icons.article_outlined),
           label: 'News',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.video_library),
+          icon: Icon(Icons.video_library_outlined),
           label: 'Shorts',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.videocam_outlined),
+          label: 'Videos',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
@@ -72,6 +76,9 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
         context.go('/shorts');
         break;
       case 3:
+        context.go('/videos');
+        break;
+      case 4:
         // Check if user is logged in
         final currentUser = ref.read(authProvider).currentUser;
         if (currentUser == null) {

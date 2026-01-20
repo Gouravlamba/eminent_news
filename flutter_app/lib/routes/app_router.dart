@@ -1,3 +1,4 @@
+import 'package:eminent_news_flutter/presentation/screens/video/videos_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../presentation/providers/auth_provider.dart';
@@ -96,8 +97,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             currentIndex = 1;
           } else if (path.startsWith('/shorts')) {
             currentIndex = 2;
-          } else if (path.startsWith('/my-profile')) {
+          } else if (path.startsWith('/videos')) {
             currentIndex = 3;
+          } else if (path.startsWith('/my-profile')) {
+            currentIndex = 4;
           }
 
           return MainLayout(
@@ -138,6 +141,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: '/shorts',
             pageBuilder: (context, state) => NoTransitionPage(
               child: const ShortsReelScreen(),
+            ),
+          ),
+          //videos
+          GoRoute(
+            path: '/videos',
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: const VideosScreen(),
             ),
           ),
 

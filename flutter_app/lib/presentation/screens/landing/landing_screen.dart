@@ -450,9 +450,9 @@ class _LandingScreenState extends State<LandingScreen> {
               children: ['11', '22', '33']
                   .map((name) => Image.asset(
                         'assets/images/$name.png',
-                        height: _isMobile(screenWidth) ? 55 : 75,
+                        height: _isMobile(screenWidth) ? 100 : 150,
                         errorBuilder: (context, error, stack) => Container(
-                          height: 75,
+                          height: 80,
                           width: 120,
                           color: Colors.grey[300],
                         ),
@@ -620,7 +620,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
     return Center(
       child: Image.asset(
-        'assets/images/contact.avif',
+        'assets/images/contact.png',
         width: imageSize,
         fit: BoxFit.contain,
         errorBuilder: (context, error, stack) => Container(

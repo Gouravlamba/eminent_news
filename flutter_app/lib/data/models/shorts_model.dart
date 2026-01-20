@@ -10,6 +10,7 @@ class ShortModel {
   final dynamic editor;
   final String createdAt;
   final String updatedAt;
+  final int likesCount; // Added property for likes count
 
   ShortModel({
     required this.id,
@@ -23,6 +24,7 @@ class ShortModel {
     this.editor,
     required this.createdAt,
     required this.updatedAt,
+    required this.likesCount, // Added likesCount to the constructor
   });
 
   factory ShortModel.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,8 @@ class ShortModel {
       editor: json['editor'],
       createdAt: json['createdAt'] ?? '',
       updatedAt: json['updatedAt'] ?? '',
+      likesCount: json['likesCount'] ??
+          0, // Map likesCount from JSON with default value
     );
   }
 
@@ -54,6 +58,7 @@ class ShortModel {
       'editor': editor,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'likesCount': likesCount, // Include likesCount in JSON serialization
     };
   }
 
