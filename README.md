@@ -618,20 +618,20 @@ http://localhost:5000/api/v1
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| `POST` | `/register` | Register new user | ❌ |
-| `POST` | `/login` | Login user | ❌ |
+| `POST` | `/register` | Register new user | ✅ |
+| `POST` | `/login` | Login user | ✅ |
 | `POST` | `/logout` | Logout user | ✅ |
 | `GET` | `/me` | Get current user details | ✅ |
 | `PUT` | `/me/update` | Update user profile | ✅ |
-| `POST` | `/password/forgot` | Forgot password | ❌ |
-| `PUT` | `/password/reset/:token` | Reset password | ❌ |
+| `POST` | `/password/forgot` | Forgot password | ✅ |
+| `PUT` | `/password/reset/:token` | Reset password | ✅ |
 
 ### **News Endpoints**
 
 | Method | Endpoint | Description | Auth Required | Role |
 |--------|----------|-------------|---------------|------|
-| `GET` | `/news` | Get all news (with filters) | ❌ | All |
-| `GET` | `/news/:id` | Get news by ID | ❌ | All |
+| `GET` | `/news` | Get all news (with filters) | ✅ | All |
+| `GET` | `/news/:id` | Get news by ID | ✅ | All |
 | `POST` | `/news/new` | Create news | ✅ | Editor/Admin |
 | `PUT` | `/news/:id` | Update news | ✅ | Editor/Admin |
 | `DELETE` | `/news/:id` | Delete news | ✅ | Editor/Admin |
@@ -642,7 +642,7 @@ http://localhost:5000/api/v1
 
 | Method | Endpoint | Description | Auth Required | Role |
 |--------|----------|-------------|---------------|------|
-| `GET` | `/shorts` | Get all shorts | ❌ | All |
+| `GET` | `/shorts` | Get all shorts | ✅ | All |
 | `GET` | `/shorts/my` | Get my shorts | ✅ | Editor/Admin |
 | `POST` | `/shorts/new` | Create short | ✅ | Editor/Admin |
 | `DELETE` | `/shorts/:id` | Delete short | ✅ | Editor/Admin |
@@ -652,7 +652,7 @@ http://localhost:5000/api/v1
 
 | Method | Endpoint | Description | Auth Required | Role |
 |--------|----------|-------------|---------------|------|
-| `GET` | `/ads` | Get all ads | ❌ | All |
+| `GET` | `/ads` | Get all ads | ✅ | All |
 | `POST` | `/ads/new` | Create ad | ✅ | Admin |
 | `DELETE` | `/ads/:id` | Delete ad | ✅ | Admin |
 
