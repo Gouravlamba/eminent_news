@@ -68,14 +68,8 @@ flutter:
     - assets/images/
   
   fonts:
-    - family: Roboto
+    - family: droid-serif
       fonts:
-        - asset: assets/fonts/Roboto-Regular.ttf
-        - asset: assets/fonts/Roboto-Bold.ttf
-          weight: 700
-
-    - family: NotoSans
-      fonts:
-        - asset: assets/fonts/NotoSans-Regular.ttf
-        - asset: assets/fonts/NotoSans-Bold.ttf
+        - asset: assets/fonts/droid-serif.regular.ttf
+        - asset: assets/fonts/droid-serif.bold.ttf
           weight: 700

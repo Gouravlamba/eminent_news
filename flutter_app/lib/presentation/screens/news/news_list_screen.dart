@@ -183,7 +183,7 @@ class _NewsListScreenState extends ConsumerState<NewsListScreen> {
               crossAxisCount: crossAxisCount,
               crossAxisSpacing: cardSpacing,
               mainAxisSpacing: cardSpacing,
-              childAspectRatio: childAspectRatio,
+              childAspectRatio: 1.25,
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) {

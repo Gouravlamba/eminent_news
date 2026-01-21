@@ -32,6 +32,7 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
 
   Widget _buildBottomNav(BuildContext context) {
     return BottomNavigationBar(
+      backgroundColor: Colors.white,
       type: BottomNavigationBarType.fixed,
       currentIndex: widget.currentIndex,
       selectedItemColor: const Color(0xFFF40607),

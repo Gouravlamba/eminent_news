@@ -108,21 +108,6 @@ class _MobileMenuDrawerState extends ConsumerState<MobileMenuDrawer> {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 children: [
                   // Shorts Link (Hidden on desktop in React, but shown here)
-                  ListTile(
-                    leading: const Icon(Icons.video_library),
-                    title: const Text(
-                      'Shorts',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    trailing: const Icon(Icons.arrow_forward, size: 22),
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.go('/shorts');
-                    },
-                  ),
 
                   const Divider(height: 24),
 
@@ -138,7 +123,7 @@ class _MobileMenuDrawerState extends ConsumerState<MobileMenuDrawer> {
                             category,
                             style: const TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           trailing: Icon(

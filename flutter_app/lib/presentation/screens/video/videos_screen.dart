@@ -101,6 +101,7 @@ class _VideosScreenState extends ConsumerState<VideosScreen> {
                             bottom: isMobile ? 20 : 24,
                           ),
                           child: VideoCard(
+                            backgroundColor: Colors.white,
                             video: video,
                             onTap: () {
                               // Navigate to video player (shorts screen)
@@ -121,7 +122,7 @@ class _VideosScreenState extends ConsumerState<VideosScreen> {
 
               // Bottom spacing
               SliverToBoxAdapter(
-                child: SizedBox(height: isMobile ? 32 : 48),
+                child: SizedBox(height: isMobile ? 28 : 44),
               ),
 
               // Footer
@@ -142,11 +143,14 @@ class VideoCard extends StatefulWidget {
   final VoidCallback onTap;
   final VoidCallback onLike;
 
+  final dynamic backgroundColor;
+
   const VideoCard({
     super.key,
     required this.video,
     required this.onTap,
     required this.onLike,
+    required this.backgroundColor,
   });
 
   @override
@@ -211,6 +215,8 @@ class _VideoCardState extends State<VideoCard> {
     final isMobile = screenWidth < 768;
 
     return Card(
+      color: Colors.white, // 👈 force pure white background
+      surfaceTintColor: Colors.white, // 👈 prevents Material 3 tint
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(isMobile ? 12 : 16),

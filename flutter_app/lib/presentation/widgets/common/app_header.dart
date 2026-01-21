@@ -78,14 +78,14 @@ class _AppHeaderState extends ConsumerState<AppHeader> {
       backgroundColor: const Color(0xFFF40607),
       elevation: 2,
       centerTitle: false,
-      leadingWidth: isMobile ? 40 : (isTablet ? 56 : 64),
+      leadingWidth: isMobile ? 35 : (isTablet ? 56 : 64),
       leading: Builder(
         builder: (context) => IconButton(
-          iconSize: 45,
+          iconSize: 35,
           icon: Icon(
             Icons.menu,
             color: Colors.white,
-            size: _getMenuIconSize(screenWidth),
+            //size: _getMenuIconSize(screenWidth),
           ),
           onPressed: () {
             Scaffold.of(context).openDrawer();

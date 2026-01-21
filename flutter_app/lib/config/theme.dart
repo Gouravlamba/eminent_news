@@ -48,26 +48,26 @@ class AppTheme {
         fontSize: 32,
         fontWeight: FontWeight.bold,
         color: darkGray,
-        fontFamilyFallback: ['sans-serif'], // Add fallback font
+        fontFamilyFallback: ['droid-serif'], // Add fallback font
       ),
       headlineMedium: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
         color: darkGray,
-        fontFamilyFallback: ['sans-serif'],
+        fontFamilyFallback: ['droid-serif'],
       ),
       bodyLarge: TextStyle(
         fontSize: 16,
         color: darkGray,
-        fontFamilyFallback: ['sans-serif'],
+        fontFamilyFallback: ['droid-serif'],
       ),
       bodyMedium: TextStyle(
         fontSize: 14,
         color: darkGray,
-        fontFamilyFallback: ['sans-serif'],
+        fontFamilyFallback: ['droid-serif'],
       ),
     ),
     // Use default system font (no custom fonts)
-    fontFamily: 'Roboto', // Set default font to Roboto
+    fontFamily: 'droid-serif', // Set default font
   );
 }

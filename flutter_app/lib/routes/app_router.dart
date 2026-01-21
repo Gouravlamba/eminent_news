@@ -1,3 +1,4 @@
+import 'package:eminent_news_flutter/presentation/screens/splash/splash_screen.dart';
 import 'package:eminent_news_flutter/presentation/screens/video/videos_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -68,7 +69,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // ========================================
       GoRoute(
         path: '/',
-        builder: (context, state) => const LandingScreen(),
+        builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
         path: '/login',

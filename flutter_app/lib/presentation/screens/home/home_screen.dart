@@ -72,9 +72,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   bool _isLargePhone(double width) => width >= 414 && width < 768;
 
   double _getMobileHorizontalPadding(double width) {
-    if (_isSmallPhone(width)) return 12;
-    if (_isStandardPhone(width)) return 16;
-    return 20;
+    if (_isSmallPhone(width)) return 02;
+    if (_isStandardPhone(width)) return 06;
+    return 0;
   }
 
   double _getMobileCardSpacing(double width) {
@@ -133,12 +133,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           child: SingleChildScrollView(
             child: Column(
               children: [
-                if (bannerAds.isNotEmpty) HeroCarousel(ads: bannerAds),
+                HeroCarousel(ads: bannerAds),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: isMobile
                         ? _getMobileHorizontalPadding(screenWidth)
-                        : 32,
+                        : 20,
                     vertical: isMobile ? 16 : 8,
                   ),
                   child: Column(
@@ -148,7 +148,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         _buildDesktopLayout(
                             sortedNews, groupedNews, highlightAds),
                       const SizedBox(height: 32),
-                      const FAQWidget(),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: const FAQWidget(),
+                      )
                     ],
                   ),
                 ),
@@ -172,53 +175,68 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Explore Categories',
-          style: TextStyle(
-            fontSize: titleFontSize,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
+        Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: Text(
+            'Explore Categories',
+            style: TextStyle(
+              fontSize: titleFontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
         ),
         const SizedBox(height: 8),
 
         // Tab Bar
         Container(
+          padding: const EdgeInsets.symmetric(horizontal: 0),
           height: _isSmallPhone(screenWidth) ? 44 : 48,
           decoration: const BoxDecoration(
             border: Border(
-              top: BorderSide(color: Color(0xFFF40607), width: 2),
-              bottom: BorderSide(color: Color(0xFFF40607), width: 2),
+              top: BorderSide(color: Color(0xFFF40607), width: 1.3),
+              bottom: BorderSide(color: Color(0xFFF40607), width: 1.3),
             ),
           ),
           child: TabBar(
             controller: _tabController,
             isScrollable: true,
             labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey[700],
+            unselectedLabelColor: Colors.grey[900],
             labelStyle: TextStyle(
               fontSize: _isSmallPhone(screenWidth) ? 14 : 16,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
             ),
+
+            // ✅ ADD PADDING HERE
+            indicatorPadding: const EdgeInsets.symmetric(
+              horizontal: 4,
+              vertical: 5,
+            ),
+
             indicator: BoxDecoration(
               color: const Color(0xFFF40607),
               borderRadius: BorderRadius.circular(5),
             ),
+
             tabs: AppConstants.newsCategories
-                .map((cat) => Tab(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: _isSmallPhone(screenWidth) ? 12 : 16,
-                        ),
-                        child: Text(cat),
+                .map(
+                  (cat) => Tab(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: _isSmallPhone(screenWidth) ? 12 : 16,
                       ),
-                    ))
+                      child: Text(cat),
+                    ),
+                  ),
+                )
                 .toList(),
           ),
         ),
 
         // Tab Views with Responsive Cards
-        SizedBox(
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 9),
           height: 600,
           child: TabBarView(
             controller: _tabController,
@@ -420,7 +438,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             ),
                           ),
                           Positioned(
-                            bottom: 16,
+                            bottom: 10,
                             left: 16,
                             right: 16,
                             child: Column(
