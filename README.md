@@ -1,4 +1,4 @@
-# 📰 Eminent News - Full Stack News Plat
+# 📰 Eminent News - Full Stack News Pla
 
 <div align="center">
 
