@@ -18,7 +18,7 @@
 
 ---
 
-## 📑 Table of Conten
+## 📑 Table of Contents
 
 - [Overview](#-overview)
 - [Features](#-features)
