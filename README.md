@@ -1,6 +1,6 @@
-# 📰 Eminent News - Full Stack News Plartfor
+# 📰 Eminent News - Full Stack News Plartform
 
-<div align="center">
+<div align="center"
 
 ![Eminent News Logo](flutter_app/assets/images/logo.png)
 
