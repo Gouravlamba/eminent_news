@@ -14,7 +14,7 @@
 
 [Features](#-features) • [Tech Stack](#-tech-stack) • [Architecture](#-architecture) • [Getting Started](#-getting-started) • [API Documentation](#-api-documentation)
 
-</div>
+</div
 
 ---
 
