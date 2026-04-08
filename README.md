@@ -34,7 +34,7 @@
 
 ---
 
-## 🌟 Overvie
+## 🌟 Overview
 
 **Eminent News** is a comprehensive news platform that provides users with access to news articles, short-form video content (similar to Instagram Reels/TikTok), and interactive features like comments, likes, and editor following. The platform implements role-based access control with three distinct user types: **Users**, **Editors**, and **Admins**.
 
