@@ -38,7 +38,7 @@
 
 **Eminent News** is a comprehensive news platform that provides users with access to news articles, short-form video content (similar to Instagram Reels/TikTok), and interactive features like comments, likes, and editor following. The platform implements role-based access control with three distinct user types: **Users**, **Editors**, and **Admins**.
 
-### Key Highlights
+### Key Highlight
 
 - 🎯 **Multi-platform Support**: Flutter mobile app (Android, iOS, Web, Desktop)
 - 🔐 **Role-Based Authentication**: User, Editor, and Admin roles with specific permissions
