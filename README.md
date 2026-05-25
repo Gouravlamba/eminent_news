@@ -23,7 +23,6 @@
 ## these all use to build sommthing new and futurstic
 ## if do your want somthing change and somthing new in your life then you need to work on it
 ## the table of content used here
-## to build somthing new and futurstic then you need to used that all process
 - [Overview](#-overview)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
