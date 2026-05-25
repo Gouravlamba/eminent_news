@@ -1,7 +1,6 @@
 # 📰 Eminent News - Full Stack News Plartform
 ## this is an plartfor that used to build new and big
-## the every new appication should be in this format 
-## if you want to buid new and fututrstic then you need to use it
+## the every new appication should be in this format
 
 <div align="center">
 
