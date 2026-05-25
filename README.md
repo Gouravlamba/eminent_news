@@ -1,5 +1,4 @@
 # 📰 Eminent News - Full Stack News Plartform
-## this is an plartfor that used to build new and big
 
 <div align="center">
 
