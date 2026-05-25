@@ -20,7 +20,6 @@
 
 ## 📑 Table of Contents
 ## the fututrestic table of contents over here
-## these all use to build sommthing new and futurstic
 - [Overview](#-overview)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
