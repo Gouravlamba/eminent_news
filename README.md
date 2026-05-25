@@ -22,7 +22,6 @@
 ## the fututrestic table of contents over here
 ## these all use to build sommthing new and futurstic
 ## if do your want somthing change and somthing new in your life then you need to work on it
-## the table of content used here
 - [Overview](#-overview)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
