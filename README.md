@@ -2,7 +2,6 @@
 ## this is an plartfor that used to build new and big
 ## the every new appication should be in this format 
 ## if you want to buid new and fututrstic then you need to use it
-## to build somthing new and big your need to make it for you
 
 <div align="center">
 
