@@ -1,5 +1,4 @@
 # 📰 Eminent News - Full Stack News Plartform
-## this is an plartform
 
 <div align="center">
 
