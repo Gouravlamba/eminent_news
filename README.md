@@ -4,7 +4,6 @@
 ## this is an plartform
 ## this is an plartform
 ## hera all the requirements over here
-## managemanat the app like this is so cool
 
 <div align="center">
 
