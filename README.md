@@ -3,7 +3,6 @@
 ## this is an plartform
 ## this is an plartform
 ## this is an plartform
-## hera all the requirements over here
 
 <div align="center">
 
